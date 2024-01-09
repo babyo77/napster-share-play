@@ -1,6 +1,7 @@
 module.exports = (io) => {
+  let Total=0
   io.on("connection", (socket) => {
-    
+    console.log(Total++);
     socket.on("JoinRoom", (data) => {
       socket.join(data.id);
       const room = io.sockets.adapter.rooms.get(data.id);
