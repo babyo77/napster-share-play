@@ -19,7 +19,7 @@ module.exports = (io) => {
     });
 
     socket.on("liked",(data)=>{
-      io.to(data.id).emit("like")
+      socket.to(data.id).emit("like")
     })
 
     socket.on("disconnecting", () => {
