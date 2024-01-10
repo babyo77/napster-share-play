@@ -1,7 +1,8 @@
+const fs = require('fs')
+let i = 0
 module.exports = (io) => {
-  let Total=0
   io.on("connection", (socket) => {
-    console.log(Total++);
+    fs.writeFileSync('./logs/temp.txt',(i++).toString())
     socket.on("JoinRoom", (data) => {
       socket.join(data.id);
       const room = io.sockets.adapter.rooms.get(data.id);
@@ -17,10 +18,18 @@ module.exports = (io) => {
       socket.to(data.id).emit("seek", data.seek);
     });
 
+    socket.on("liked",(data)=>{
+      socket.to(data.id).emit("like")
+    })
+
     socket.on("disconnecting", () => {
       const room = socket.rooms;
+
       room.forEach((room) => {
-        if (room !== socket.id) socket.to(room).emit("UserLeft");
+        const clientsInRoom = io.sockets.adapter.rooms.get(room);
+        if (clientsInRoom && clientsInRoom.size === 2) {
+          socket.to(room).emit("UserLeft");
+        }
       });
     });
   });
