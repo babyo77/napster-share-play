@@ -13,10 +13,20 @@ const io = require("socket.io")(server, {
   },
 });
 
-require("./routes/socket")(io);
+let count = 0;
+
+io.on("connection", (socket) => {
+  console.log(`${socket.id} connected.`);
+  count++;
+
+  socket.on("disconnect", () => {
+    console.log(`${socket.id} disconnected.`);
+    count--;
+  });
+});
 
 app.get("/", (req, res) => {
-  fs.createReadStream("./logs/temp.txt").pipe(res);
+  res.json({ live: count });
 });
 
 server.listen(port, () => {
