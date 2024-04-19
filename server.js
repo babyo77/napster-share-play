@@ -18,18 +18,20 @@ io.on("connection", (socket) => {
   socket.on("join", (data) => {
     count.add(socket.id);
     socket.join(data.$id);
-    socket.to(data.$id).emit("joined");
+    console.log(socket.rooms);
+    socket.to(data.id).emit("join", data);
   });
 
   socket.on("message", (data) => {
-    socket.to(data.$id).emit("message", data);
+    console.log(data);
+    socket.to(data.id).emit("message", data);
   });
 
   socket.on("duration", (data) => {
-    socket.to(data.$id).emit("duration", data);
+    socket.to(data.id).emit("duration", data);
   });
   socket.on("progress", (data) => {
-    socket.to(data.$id).emit("progress", data);
+    socket.to(data.id).emit("progress", data);
   });
 
   socket.on("disconnect", () => {
