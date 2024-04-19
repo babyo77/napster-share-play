@@ -13,20 +13,32 @@ const io = require("socket.io")(server, {
   },
 });
 
-let count = 0;
-
+let count = new Set();
 io.on("connection", (socket) => {
-  console.log(`${socket.id} connected.`);
-  count++;
+  socket.on("join", (data) => {
+    count.add(socket.id);
+    socket.join(data.$id);
+    socket.to(data.$id).emit("joined");
+  });
+
+  socket.on("message", (data) => {
+    socket.to(data.$id).emit("message", data);
+  });
+
+  socket.on("duration", (data) => {
+    socket.to(data.$id).emit("duration", data);
+  });
+  socket.on("progress", (data) => {
+    socket.to(data.$id).emit("progress", data);
+  });
 
   socket.on("disconnect", () => {
-    console.log(`${socket.id} disconnected.`);
-    count--;
+    count.delete(socket.id);
   });
 });
 
 app.get("/", (req, res) => {
-  res.json({ live: count });
+  res.json({ live: [...count] });
 });
 
 server.listen(port, () => {
