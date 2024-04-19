@@ -17,7 +17,7 @@ let count = new Set();
 io.on("connection", (socket) => {
   socket.on("join", (data) => {
     count.add(socket.id);
-    socket.join(data.$id);
+    socket.join(data.id);
     console.log(socket.rooms);
     socket.to(data.id).emit("join", data);
   });
