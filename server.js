@@ -22,14 +22,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message", (data) => {
-    socket.to(data.id).emit("message", data);
+    io.emit("message", data);
   });
 
   socket.on("duration", (data) => {
-    socket.to(data.id).emit("duration", data);
+    io.emit("duration", data);
   });
   socket.on("progress", (data) => {
-    socket.to(data.id).emit("progress", data);
+    io.emit("progress", data);
   });
 
   socket.on("disconnect", () => {
