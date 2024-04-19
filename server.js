@@ -18,7 +18,7 @@ io.on("connection", (socket) => {
   socket.on("join", (data) => {
     count.add(socket.id);
     socket.join(data.id);
-    socket.to(data.id).emit("new", data);
+    io.emit("new", data);
   });
 
   socket.on("message", (data) => {
