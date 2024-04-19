@@ -18,12 +18,10 @@ io.on("connection", (socket) => {
   socket.on("join", (data) => {
     count.add(socket.id);
     socket.join(data.id);
-    console.log(socket.rooms);
-    socket.to(data.id).emit("join", data);
+    socket.to(data.id).emit("new", data);
   });
 
   socket.on("message", (data) => {
-    console.log(data);
     socket.to(data.id).emit("message", data);
   });
 
